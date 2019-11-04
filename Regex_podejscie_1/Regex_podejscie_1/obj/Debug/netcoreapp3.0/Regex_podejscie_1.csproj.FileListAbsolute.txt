@@ -9,3 +9,14 @@ C:\Users\Bartek\source\repos\Regex_podejscie_1\Regex_podejscie_1\obj\Debug\netco
 C:\Users\Bartek\source\repos\Regex_podejscie_1\Regex_podejscie_1\obj\Debug\netcoreapp3.0\Regex_podejscie_1.AssemblyInfo.cs
 C:\Users\Bartek\source\repos\Regex_podejscie_1\Regex_podejscie_1\obj\Debug\netcoreapp3.0\Regex_podejscie_1.dll
 C:\Users\Bartek\source\repos\Regex_podejscie_1\Regex_podejscie_1\obj\Debug\netcoreapp3.0\Regex_podejscie_1.pdb
+C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\bin\Debug\netcoreapp3.0\Regex_podejscie_1.exe
+C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\bin\Debug\netcoreapp3.0\Regex_podejscie_1.deps.json
+C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\bin\Debug\netcoreapp3.0\Regex_podejscie_1.runtimeconfig.json
+C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\bin\Debug\netcoreapp3.0\Regex_podejscie_1.runtimeconfig.dev.json
+C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\bin\Debug\netcoreapp3.0\Regex_podejscie_1.dll
+C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\bin\Debug\netcoreapp3.0\Regex_podejscie_1.pdb
+C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\obj\Debug\netcoreapp3.0\Regex_podejscie_1.csprojAssemblyReference.cache
+C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\obj\Debug\netcoreapp3.0\Regex_podejscie_1.AssemblyInfoInputs.cache
+C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\obj\Debug\netcoreapp3.0\Regex_podejscie_1.AssemblyInfo.cs
+C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\obj\Debug\netcoreapp3.0\Regex_podejscie_1.dll
+C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\obj\Debug\netcoreapp3.0\Regex_podejscie_1.pdb
