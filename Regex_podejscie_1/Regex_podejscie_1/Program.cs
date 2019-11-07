@@ -14,14 +14,13 @@ namespace Regex_podejscie_1
             parser.fileOpen();
             wezly = parser.pharse();
 
-            //---------------SPRAWDZENIE---------------------------
-
+            //----------TEST----------------------------------------------------------------
             foreach (Wezel w in wezly)
             {
-                Console.WriteLine("oid wynosi: " + w.OID + ", wartosc wynosi: " + w.Value );
+                Console.WriteLine("oid: " + w.ID + ", name: " + w.name);
+                Console.WriteLine("-------------------------------");
             }
-
-            //-----------------------------------------------------
+            //------------------------------------------------------------------------------
         }
     }
 }

@@ -22,6 +22,7 @@ public class Parser
             using (StreamReader sr = new StreamReader(this.path))
             {
                 content = sr.ReadToEnd();
+                //Console.WriteLine(content);
             }
         }
         catch (IOException e)
@@ -37,23 +38,48 @@ public class Parser
         List<Wezel> wezly = new List<Wezel>();
 
         int OID;
-        string value;
+        string name;
+        string parrent_name;
+        string syntax;
+        string access;
+        string status;
+       
         List<string> obiekty = new List<string>();
 
-        string OID_pattern = @"OID: [0-9]";
-        string Value_pattern = @"[ ]WARTOSC: [^ ]+";
-        string Object_pattern = @"OID: [0-9] +WARTOSC: +[^ ]+";
+        string OID_pattern = @"::= {[ ]+[^ ]+ [0-9]+";
+        string name_pattern = @"\w*\s*OBJECT-TYPE.*?";
+        string parrent_name_pattern = "::= {[ ]+[^ ]+";
+        string syntax_pattern = @"SYNTAX[ ]+[^ ]+";
+        string access_pattern = @"ACCESS[ ]+[^ ]+";
+        string status_pattern = "STATUS[ ]+[^ ]+";
+        string Node_pattern = @"\w*\s*OBJECT-TYPE\s*SYNTAX.*?ACCESS.*?STATUS.*?DESCRIPTION\s*.*?\s*::=\s*{.*?}";
 
-        foreach (Match match in Regex.Matches(content, Object_pattern, RegexOptions.IgnoreCase))
+        foreach (Match match in Regex.Matches(content, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))    //ignorowanie wielkości znaków, odczyt tekstu jako jednej lini (enter jest tez znakiem '.')
         {
-            obiekty.Add(match.Value);
+            obiekty.Add(match.Value);       //podział biblioteki na pojedyncze węzły/obiekty
+            //Console.WriteLine(match.Value);
         }
 
         foreach (string ob in obiekty)
         {
-            Int32.TryParse(Regex.Replace(Regex.Replace(ob, Value_pattern, String.Empty), "OID: ", String.Empty), out OID);
-            value = (Regex.Replace(Regex.Replace(ob, OID_pattern, String.Empty), "WARTOSC: ", String.Empty));
-            wezly.Add(new Wezel(OID, value));
+            parrent_name = Regex.Replace(Regex.Match(ob, parrent_name_pattern).Value, "::= { ", String.Empty);      //odczyt poszczególnych danych z jednego węzła/obiektu w postaci stringa
+            name = Regex.Replace(Regex.Match(ob, name_pattern).Value, " OBJECT-TYPE", String.Empty);
+            syntax = Regex.Replace(Regex.Match(ob, syntax_pattern).Value, "SYNTAX[ ]+", String.Empty);
+            access = Regex.Replace(Regex.Match(ob, access_pattern).Value, @"ACCESS[ ]+", String.Empty);
+            status = Regex.Replace(Regex.Match(ob, status_pattern).Value, "STATUS[ ]+", String.Empty);
+            Int32.TryParse(Regex.Replace(Regex.Match(ob, OID_pattern).Value, "::= {[ ]+[^ ]+ ", String.Empty), out OID);
+
+            access = Regex.Replace(access, @"\s*", String.Empty, RegexOptions.Singleline);
+            status = Regex.Replace(status, @"\s*", String.Empty, RegexOptions.Singleline);
+
+            /*Console.WriteLine(OID);
+            Console.WriteLine(parrent_name);
+            Console.WriteLine(name);
+            Console.WriteLine(status);
+            Console.WriteLine(syntax);
+            Console.WriteLine(access);*/
+
+            wezly.Add(new Wezel(OID, name, syntax, access, status, parrent_name));
         }
 
         return wezly;
