@@ -71,13 +71,7 @@ public class Parser
 
             access = Regex.Replace(access, @"\s*", String.Empty, RegexOptions.Singleline);
             status = Regex.Replace(status, @"\s*", String.Empty, RegexOptions.Singleline);
-
-            /*Console.WriteLine(OID);
-            Console.WriteLine(parrent_name);
-            Console.WriteLine(name);
-            Console.WriteLine(status);
-            Console.WriteLine(syntax);
-            Console.WriteLine(access);*/
+            syntax = Regex.Replace(syntax, @"\s*", String.Empty, RegexOptions.Singleline);
 
             wezly.Add(new Wezel(OID, name, syntax, access, status, parrent_name));
         }

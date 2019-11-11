@@ -12,14 +12,41 @@ public class TreeBrowser
 
     public Wezel findParrent(Wezel dziecko)
     {
-        foreach(Wezel w in liscie)
-        {
-            if(w.name == dziecko.parrent_name)
+
+            bool isRoot = true;
+            Wezel root = new Wezel(0, "root", "root", "root", "root", "root");
+            Wezel rodzic = new Wezel(0, "rodzic", "rodzic", "rodzic", "rodzic", "rodzic");
+
+            foreach (Wezel w in liscie)
             {
-                return w;
+                if (w.name == dziecko.parrent_name)
+                {
+                    isRoot = false;
+                    rodzic = w;
+                    //return w;
+                }
             }
-        }
-        return null;
+
+            if(isRoot == true)
+            {
+                return root;
+            }
+            else
+            {
+                return rodzic;
+            }
+            
     }
 
+    public Wezel findByName(string name)
+    {
+            foreach (Wezel w in liscie)
+            {
+                if (w.name == name)
+                {
+                    return w;
+                }
+            }
+            return null;
+    }
 }
