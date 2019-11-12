@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29403.142
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Regex_podejscie_1", "Regex_podejscie_1\Regex_podejscie_1.csproj", "{7BA640C9-02E9-4315-AFF0-D597EE4C645C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{204810AA-93A3-453E-A790-B47AB5834AC7}"
+	ProjectSection(SolutionItems) = preProject
+		Wezel.cs = Wezel.cs
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7BA640C9-02E9-4315-AFF0-D597EE4C645C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BA640C9-02E9-4315-AFF0-D597EE4C645C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BA640C9-02E9-4315-AFF0-D597EE4C645C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BA640C9-02E9-4315-AFF0-D597EE4C645C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F5C672E0-CEF9-4095-9705-523C3D28F8ED}
+	EndGlobalSection
+EndGlobal

@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Marianka\\Desktop\\Bartek\\Regex_podejscie_1\\Regex_podejscie_1\\Regex_podejscie_1.csproj",
+      "projectUniqueName": "C:\\Users\\Marianka\\Desktop\\Bartek\\Regex_proj\\Regex_podejscie_1\\Regex_podejscie_1\\Regex_podejscie_1.csproj",
       "projectName": "Regex_podejscie_1",
-      "projectPath": "C:\\Users\\Marianka\\Desktop\\Bartek\\Regex_podejscie_1\\Regex_podejscie_1\\Regex_podejscie_1.csproj",
+      "projectPath": "C:\\Users\\Marianka\\Desktop\\Bartek\\Regex_proj\\Regex_podejscie_1\\Regex_podejscie_1\\Regex_podejscie_1.csproj",
       "packagesPath": "C:\\Users\\Marianka\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Marianka\\Desktop\\Bartek\\Regex_podejscie_1\\Regex_podejscie_1\\obj\\",
+      "outputPath": "C:\\Users\\Marianka\\Desktop\\Bartek\\Regex_proj\\Regex_podejscie_1\\Regex_podejscie_1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Marianka\\AppData\\Roaming\\NuGet\\NuGet.Config",
