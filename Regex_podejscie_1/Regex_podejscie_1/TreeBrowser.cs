@@ -12,14 +12,69 @@ public class TreeBrowser
 
     public Wezel findParrent(Wezel dziecko)
     {
-        foreach(Wezel w in liscie)
-        {
-            if(w.name == dziecko.parrent_name)
+
+        bool isRoot = true;
+        Wezel rodzic = new Wezel(0, "rodzic", "rodzic", "rodzic", "rodzic", "rodzic");
+
+            foreach (Wezel w in liscie)
             {
-                return w;
+                if (w.name == dziecko.parrent_name)
+                {
+                    isRoot = false;
+                    rodzic = w;
+                }
             }
-        }
-        return null;
+
+            if(isRoot == true)
+            {
+                return null;
+            }
+            else
+            {
+                return rodzic;
+            }
+            
     }
 
+    public Wezel findByName(string name)
+    {
+            foreach (Wezel w in liscie)
+            {
+                if (w.name == name)
+                {
+                    return w;
+                }
+            }
+            return null;
+    }
+
+
+    //funkcja do wywalenia
+    public List<int> findLongOID(string name)
+    {
+        List<int> oid = new List<int>();
+        Wezel szukany = new Wezel(0, "szukany", "szukany", "szukany", "szukany", "szukany");
+        bool doesExist = false;
+
+        foreach(Wezel w in liscie)
+        {
+            if(w.name == name)
+            {
+                szukany = w;
+                doesExist = true;
+            }
+        }
+
+        if(doesExist)
+        {
+            oid.Add(szukany.ID);
+
+        }
+        else
+        {
+            return null;
+        }
+
+        return oid;
+    }
 }
