@@ -42,17 +42,12 @@ public class Parser
         string parrent_name;
         string syntax;
         string access;
+        string description;
         string status;
        
         List<string> obiekty = new List<string>();
 
-        string OID_pattern = @"::= {[ ]+[^ ]+ [0-9]+";
-        string name_pattern = @"\w*\s*OBJECT-TYPE.*?";
-        string parrent_name_pattern = "::= {[ ]+[^ ]+";
-        string syntax_pattern = @"SYNTAX[ ]+[^ ]+";
-        string access_pattern = @"ACCESS[ ]+[^ ]+";
-        string status_pattern = "STATUS[ ]+[^ ]+";
-        string Node_pattern = @"\w*\s*OBJECT-TYPE\s*SYNTAX.*?ACCESS.*?STATUS.*?DESCRIPTION\s*.*?\s*::=\s*{.*?}";
+        string Node_pattern = @"(?<name>\S+)\sOBJECT-TYPE\s*SYNTAX\s+(?<syntax>.*?)\s*ACCESS\s+(?<access>\S*)\s+STATUS\s+(?<status>\w*)\s*DESCRIPTION\s*(?<description>.*?)::=\s{\s(?<rodzic>\S*)\s(?<OID>\d+)\s}";
 
         foreach (Match match in Regex.Matches(content, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))    //ignorowanie wielkości znaków, odczyt tekstu jako jednej lini (enter jest tez znakiem '.')
         {
@@ -62,16 +57,13 @@ public class Parser
 
         foreach (string ob in obiekty)
         {
-            parrent_name = Regex.Replace(Regex.Match(ob, parrent_name_pattern).Value, "::= { ", String.Empty);      //odczyt poszczególnych danych z jednego węzła/obiektu w postaci stringa
-            name = Regex.Replace(Regex.Match(ob, name_pattern).Value, " OBJECT-TYPE", String.Empty);
-            syntax = Regex.Replace(Regex.Match(ob, syntax_pattern).Value, "SYNTAX[ ]+", String.Empty);
-            access = Regex.Replace(Regex.Match(ob, access_pattern).Value, @"ACCESS[ ]+", String.Empty);
-            status = Regex.Replace(Regex.Match(ob, status_pattern).Value, "STATUS[ ]+", String.Empty);
-            Int32.TryParse(Regex.Replace(Regex.Match(ob, OID_pattern).Value, "::= {[ ]+[^ ]+ ", String.Empty), out OID);
-
-            access = Regex.Replace(access, @"\s*", String.Empty, RegexOptions.Singleline);
-            status = Regex.Replace(status, @"\s*", String.Empty, RegexOptions.Singleline);
-            syntax = Regex.Replace(syntax, @"\s*", String.Empty, RegexOptions.Singleline);
+            parrent_name = Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[6].Value;     //odczyt poszczególnych danych z jednego węzła/obiektu w postaci stringa
+            name = Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
+            syntax = Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[2].Value;
+            access = Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[3].Value;
+            status = Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[4].Value;
+            description = Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[5].Value;
+            Int32.TryParse(Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[7].Value , out OID);
 
             wezly.Add(new Wezel(OID, name, syntax, access, status, parrent_name));
         }
@@ -90,10 +82,7 @@ public class Parser
 
         List<string> obiekty = new List<string>();
 
-        string Identifier_pattern = @"\w*\s*OBJECT\s*IDENTIFIER\s*::=\s*{\s*[^ ]+\s*[0-9]*\s*}";
-        string name_pattern = @"\w*\s*OBJECT\s*IDENTIFIER.*?";
-        string OID_pattern = @"::= {[ ]+[^ ]+ [0-9]+";
-        string parrent_name_pattern = "::= {[ ]+[^ ]+";
+        string Identifier_pattern = @"(?<name>\S+)\s+OBJECT\sIDENTIFIER\s::=\s{\s(?<rodzic>\S+)\s(?<ID>\d+)\s}";
 
         foreach (Match match in Regex.Matches(content, Identifier_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))    //ignorowanie wielkości znaków, odczyt tekstu jako jednej lini (enter jest tez znakiem '.')
         {
@@ -103,12 +92,13 @@ public class Parser
 
         foreach (string ob in obiekty)
         {
-            parrent_name = Regex.Replace(Regex.Match(ob, parrent_name_pattern).Value, "::= { ", String.Empty);      //odczyt poszczególnych danych z jednego węzła/obiektu w postaci stringa
-            name = Regex.Replace(Regex.Match(ob, name_pattern).Value, " OBJECT IDENTIFIER", String.Empty);
-            Int32.TryParse(Regex.Replace(Regex.Match(ob, OID_pattern).Value, "::= {[ ]+[^ ]+ ", String.Empty), out OID);
+            parrent_name = Regex.Match(ob, Identifier_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[2].Value;
+            name = Regex.Match(ob, Identifier_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
+            Int32.TryParse(Regex.Match(ob, Identifier_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[3].Value, out OID);
 
             wezly.Add(new Wezel(OID, name, null , null, null, parrent_name));
         }
+
 
         /*foreach (Wezel w in wezly)
         {
@@ -155,7 +145,7 @@ public class Parser
 
         foreach (string s in importsList)
         {
-            string path = @"C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\" + s;
+            string path = @"C:\Users\Marianka\Desktop\Bartek\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\" + s;
 
             if (File.Exists(path))
             {
@@ -179,6 +169,10 @@ public class Parser
                     Console.WriteLine(e.Message);
                 }
             }
+            else
+            {
+                Console.WriteLine("FILE: " + path + "DOES NOT EXIST!");
+            }
         }
 
         foreach (Wezel w in insideFileNodes1)
@@ -195,6 +189,15 @@ public class Parser
         {
             insideFileNodes.Add(w);
         }
+
+
+        /*foreach (Wezel w in insideFileNodes3)
+        {
+            Console.WriteLine("OID: " + w.ID);
+            Console.WriteLine("NAME: " + w.name);
+            Console.WriteLine("PARRENT NAME: " + w.parrent_name);
+            //Console.WriteLine("---------------------------------------------");
+        }*/
 
         return insideFileNodes;
     }
