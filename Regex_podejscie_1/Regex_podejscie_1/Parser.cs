@@ -120,7 +120,7 @@ public class Parser
         string importPath;
 
         string Imports_pattern = @"IMPORTS.*?;";
-        string from_pattern = @"FROM\s*[^ ;]+";
+        string from_pattern = @"FROM\s(?<nazwa>\S*)\s";
 
         List<Wezel> insideFileNodes = new List<Wezel>();
         List<Wezel> insideFileNodes1 = new List<Wezel>();
@@ -134,10 +134,9 @@ public class Parser
 
         foreach (string imp in importsBlock)
         {
-            foreach (Match m in Regex.Matches(imp, from_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))
+            foreach (Match m in Regex.Matches(imp, from_pattern))
             {
-                importPath = Regex.Replace(m.Value, @"FROM\s *", String.Empty);
-                importPath = Regex.Replace(importPath, @"\s*", String.Empty, RegexOptions.Singleline);
+                importPath = Regex.Match(imp, from_pattern).Groups[1].Value;
                 importsList.Add(importPath + ".txt");
             }
         }
@@ -145,7 +144,7 @@ public class Parser
 
         foreach (string s in importsList)
         {
-            string path = @"C:\Users\Marianka\Desktop\Bartek\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\" + s;
+            string path = @"C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\" + s;
 
             if (File.Exists(path))
             {
@@ -171,7 +170,7 @@ public class Parser
             }
             else
             {
-                Console.WriteLine("FILE: " + path + "DOES NOT EXIST!");
+                Console.WriteLine("FILE: " + path + " DOES NOT EXIST!");
             }
         }
 

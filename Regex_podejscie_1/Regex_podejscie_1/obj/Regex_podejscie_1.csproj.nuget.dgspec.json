@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Marianka\\Desktop\\Bartek\\Regex_proj\\Regex_podejscie_1\\Regex_podejscie_1\\Regex_podejscie_1.csproj": {}
+    "C:\\Users\\Bartek\\source\\repos\\Regex_proj\\Regex_podejscie_1\\Regex_podejscie_1\\Regex_podejscie_1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Marianka\\Desktop\\Bartek\\Regex_proj\\Regex_podejscie_1\\Regex_podejscie_1\\Regex_podejscie_1.csproj": {
+    "C:\\Users\\Bartek\\source\\repos\\Regex_proj\\Regex_podejscie_1\\Regex_podejscie_1\\Regex_podejscie_1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Marianka\\Desktop\\Bartek\\Regex_proj\\Regex_podejscie_1\\Regex_podejscie_1\\Regex_podejscie_1.csproj",
+        "projectUniqueName": "C:\\Users\\Bartek\\source\\repos\\Regex_proj\\Regex_podejscie_1\\Regex_podejscie_1\\Regex_podejscie_1.csproj",
         "projectName": "Regex_podejscie_1",
-        "projectPath": "C:\\Users\\Marianka\\Desktop\\Bartek\\Regex_proj\\Regex_podejscie_1\\Regex_podejscie_1\\Regex_podejscie_1.csproj",
-        "packagesPath": "C:\\Users\\Marianka\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Marianka\\Desktop\\Bartek\\Regex_proj\\Regex_podejscie_1\\Regex_podejscie_1\\obj\\",
+        "projectPath": "C:\\Users\\Bartek\\source\\repos\\Regex_proj\\Regex_podejscie_1\\Regex_podejscie_1\\Regex_podejscie_1.csproj",
+        "packagesPath": "C:\\Users\\Bartek\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Bartek\\source\\repos\\Regex_proj\\Regex_podejscie_1\\Regex_podejscie_1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Marianka\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Bartek\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
