@@ -200,4 +200,26 @@ public class Parser
 
         return insideFileNodes;
     }
+
+
+    public void pharseDataType(List<DataType> lista)
+    {
+        int ID;
+        string name;
+        string type;
+
+        string DataType_pattern = @"(?<name>\S*)\s*::=\s*\[APPLICATION\s(?<id>\d*)].*?\s*IMPLICIT\s*(?<type>.*?)(\n|\s*--)";
+
+        foreach (string ob in Regex.Matches(content, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))
+        {
+            type = Regex.Match(ob, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[3].Value;     //odczyt poszczególnych danych z jednego węzła/obiektu w postaci stringa
+            name = Regex.Match(ob, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
+            Int32.TryParse(Regex.Match(ob, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[2].Value, out ID);
+
+            DataType d = new DataType(ID, name, type);
+
+            if(lista.Exists(Predicate<DataType is >))
+        }
+
+    }
 }
