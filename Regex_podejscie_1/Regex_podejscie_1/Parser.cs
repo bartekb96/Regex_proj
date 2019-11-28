@@ -6,8 +6,8 @@ using System.Text.RegularExpressions;
 public class Parser
 {
     public string path;
-
-    private string content; 
+    private string content;
+    public List<DataType> DataTypesList;
 
     public Parser(string path)
     {
@@ -202,24 +202,90 @@ public class Parser
     }
 
 
-    public void pharseDataType(List<DataType> lista)
+    public void pharseDataType()
     {
-        int ID;
-        string name;
         string type;
+        string DT_Class;
+        int tag;
+        string CodeingType;
+        string ancestorType;
 
-        string DataType_pattern = @"(?<name>\S*)\s*::=\s*\[APPLICATION\s(?<id>\d*)].*?\s*IMPLICIT\s*(?<type>.*?)(\n|\s*--)";
+        int size;
+        long range;
 
-        foreach (string ob in Regex.Matches(content, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))
+        string subcontent = "";
+        DataTypesList = new List<DataType>();
+
+        try
         {
-            type = Regex.Match(ob, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[3].Value;     //odczyt poszczególnych danych z jednego węzła/obiektu w postaci stringa
-            name = Regex.Match(ob, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
-            Int32.TryParse(Regex.Match(ob, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[2].Value, out ID);
-
-            DataType d = new DataType(ID, name, type);
-
-            if(lista.Exists(Predicate<DataType is >))
+            using (StreamReader sr = new StreamReader(@"C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\RFC1155-SMI.txt"))
+            {
+                subcontent = sr.ReadToEnd();
+            }
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine("CANNOT PHARSE DATA TYPE! :");
+            Console.WriteLine(e.Message);
         }
 
+        string DataType_pattern = @"(?<type>\S*)\s*::=\s*\[(?<DT_class>\S*)\s(?<tag>\d*)]\s*(--.*?\n\s*|\s*)(?<CodeingType>\S*)\s*(?<ancestorType>.*?)\s*(--|\((0..(?<range>\d+)|SIZE\s*\((?<size>\d+)\))\)|\n)";
+        //(?< type >\S *)\s *::=\s *\[(?< DT_class >\S *)\s(?< tag >\d *)]\s* (--.*?\n\s*|\s*)(?<CodeingType>\S*)\s* (?<ancestorType>.*?)\s* (--|\n|\(((?<min_range>\d*..(?<max_range>\d*))\)|SIZE\s*\(((?<size>\d*)|((?<min_size>\d*)..(?<max_size>\d*)))\)\)))
+
+        foreach (Match ob in Regex.Matches(subcontent, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))
+        {
+            type = Regex.Match(ob.Value, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[4].Value;     //odczyt poszczególnych danych z jednego węzła/obiektu w postaci stringa
+            DT_Class = Regex.Match(ob.Value, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[5].Value;
+            Int32.TryParse(Regex.Match(ob.Value, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[6].Value, out tag);
+            CodeingType = Regex.Match(ob.Value, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[7].Value;
+            ancestorType = Regex.Match(ob.Value, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[8].Value;
+            Int64.TryParse(Regex.Match(ob.Value, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[9].Value, out range);
+            Int32.TryParse(Regex.Match(ob.Value, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[10].Value, out size);
+
+            DataTypesList.Add(new DataType(type, DT_Class, tag, CodeingType, ancestorType, size, range));
+        }
+
+        /*foreach(DataType d in lista)
+        {
+            Console.WriteLine("TYPE: " + d.type);
+            Console.WriteLine("CLASS: " + d.DT_Class);
+            Console.WriteLine("TAG: " + d.tag);
+            Console.WriteLine("CODEING TYPE: " + d.CodeingType);
+            Console.WriteLine("ANCESTOR TYPE: " + d.ancestorType);
+            Console.WriteLine("SIZE: " + d.size);
+            Console.WriteLine("RANGE: " + d.range);
+            Console.WriteLine("---------------------------------------------");
+        }*/
+
+        //DataTypesList.Add(new DataType("1", "1", 1, "1", "1", 1, 1));
+    }
+
+    public List<Wezel> pharseMIBfile()
+    {
+        List<Wezel> drzewo = new List<Wezel>();
+
+        this.fileOpen();
+
+        drzewo.Add(new Wezel(1, "internet", null, null, null, "dod"));
+        drzewo.Add(new Wezel(6, "dod", null, null, null, "org"));
+        drzewo.Add(new Wezel(3, "org", null, null, null, "iso"));
+        drzewo.Add(new Wezel(1, "iso", null, null, null, null));  //korzeń
+
+        foreach(Wezel w in this.pharseImport())
+        {
+            drzewo.Add(w);
+        }
+
+        foreach (Wezel w in this.pharseObjectType())
+        {
+            drzewo.Add(w);
+        }
+
+        foreach (Wezel w in this.pharseObjectIdentifier())
+        {
+            drzewo.Add(w);
+        }
+
+        return drzewo;
     }
 }

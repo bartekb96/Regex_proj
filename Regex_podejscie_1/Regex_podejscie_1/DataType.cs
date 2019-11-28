@@ -5,15 +5,33 @@ using System.Text;
 
 public class DataType
 {
-    private int ID;
-    private string name;
-    private string type;
+    public string type;
+    public string DT_Class; //data type class, czyli w sumie Klasa
+    public int tag;
+    public string CodeingType;
+    public string ancestorType;
 
-    public DataType(int id, string n, string t)
+    public int size;
+    public int MinSize;
+    public int MaxSize;
+
+    public long MinRange;
+    public long MaxRange;
+
+    public List<DataType> Sequence = new List<DataType>();
+
+    public DataType(string Type, string dt_class, int Tag, string _codeingType, string _ancestorType, int Size, int _MinSize, int _MaxSize, long _MinRange, long _MaxRange)
     {
-        ID = id;
-        name = n;
-        type = t;
+        type = Type;
+        DT_Class = dt_class;
+        tag = Tag;
+        CodeingType = _codeingType;
+        ancestorType = _ancestorType;
+        size = Size;
+        MinSize = _MinSize;
+        MaxSize = _MaxSize;
+        MinRange = _MinRange;
+        MaxRange = _MaxRange;
     }
 
 }

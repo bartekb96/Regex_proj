@@ -77,4 +77,27 @@ public class TreeBrowser
 
         return oid;
     }
+
+    public void addParrent(List<Wezel> l)
+    {
+        foreach (Wezel w in l)      //przypisywanie rodziów dziecom
+        {
+            try
+            {
+                if (this.findParrent(w) != null)
+                {
+                    Wezel rodzic = this.findParrent(w);
+                    rodzic.AddChild(w);
+                }
+                else
+                {
+                    Console.WriteLine("znaleziono goscia bez rodzica: " + w.name);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Could not link parrent to child: " + e.Message);
+            }
+        }
+    }
 }
