@@ -14,7 +14,7 @@ public class TreeBrowser
     {
 
         bool isRoot = true;
-        Wezel rodzic = new Wezel(0, "rodzic", "rodzic", "rodzic", "rodzic", "rodzic");
+        Wezel rodzic = new Wezel(0, "rodzic", null, "rodzic", "rodzic", "rodzic");
 
             foreach (Wezel w in liscie)
             {
@@ -53,7 +53,7 @@ public class TreeBrowser
     public List<int> findLongOID(string name)
     {
         List<int> oid = new List<int>();
-        Wezel szukany = new Wezel(0, "szukany", "szukany", "szukany", "szukany", "szukany");
+        Wezel szukany = new Wezel(0, "szukany", null, "szukany", "szukany", "szukany");
         bool doesExist = false;
 
         foreach(Wezel w in liscie)

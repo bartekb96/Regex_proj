@@ -7,7 +7,7 @@ public class Parser
 {
     public string path;
     private string content;
-    public List<DataType> DataTypesList;
+    public List<DataType> DataTypesList = new List<DataType>();
 
     public Parser(string path)
     {
@@ -40,13 +40,13 @@ public class Parser
         int OID;
         string name;
         string parrent_name;
-        string syntax;
+        DataType syntax;
         string access;
         string description;
         string status;
 
         //------NEW DATA TYPE--------
-        List<DataType> tmpDataType = new List<DataType>();
+        DataType tmpDataType = new DataType("", "", 0, "", "", 0, 0, 0, 0, 0);
 
         string type;
         int size;
@@ -63,21 +63,17 @@ public class Parser
         List<string> obiekty = new List<string>();
 
         string Node_pattern = @"(?<name>\S+)\sOBJECT-TYPE\s*SYNTAX\s+(?<syntax>.*?)\s*ACCESS\s+(?<access>\S*)\s+STATUS\s+(?<status>\w*)\s*DESCRIPTION\s*(?<description>.*?)::=\s{\s(?<rodzic>\S*)\s(?<OID>\d+)\s}";
-        //SYNTAX PATTERN BELOW:
-        //SYNTAX\s*(SEQUENCE\sOF\s*(?<sequence_name>\S*)|((?<type1>\S*)\s*(\n|(\((?<min_range>\d*..(?<max_range>\d*)\)))|(\(SIZE\s\((?<min_size>\d*)..(?<max_size>\d*)\)\))|(\(SIZE\s*\((?<size>\d*)\)\))|())))
         string Syntax_pattern = @"SYNTAX\s*(SEQUENCE\sOF\s*(?<sequence_name>\S*)|((?<type1>\S*)\s*(\n|(\((?<min_range>\d*..(?<max_range>\d*)\)))|(\(SIZE\s\((?<min_size>\d*)..(?<max_size>\d*)\)\))|(\(SIZE\s*\((?<size>\d*)\)\))|({\n(?<sequence>.*?)}))))";
 
-        foreach (Match match in Regex.Matches(content, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))    //ignorowanie wielkości znaków, odczyt tekstu jako jednej lini
+        foreach (Match match in Regex.Matches(content, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))
         {
-            obiekty.Add(match.Value);       //podział biblioteki na pojedyncze węzły/obiekty
-            //Console.WriteLine(match.Value);
+            obiekty.Add(match.Value);
         }
 
         foreach (string ob in obiekty)
         {
-            parrent_name = Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[6].Value;     //odczyt poszczególnych danych z jednego węzła/obiektu w postaci stringa
+            parrent_name = Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[6].Value;
             name = Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
-            syntax = Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[2].Value;
 
             foreach (Match obj in Regex.Matches(ob, Syntax_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))
             {
@@ -91,7 +87,25 @@ public class Parser
                 Int32.TryParse(Regex.Match(obj.Value, Syntax_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[12].Value, out MinSize);
                 Int32.TryParse(Regex.Match(obj.Value, Syntax_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[13].Value, out MaxSize);
 
-                tmpDataType.Add(new DataType(type, "", 0, "", "", size, MinSize, MaxSize, MinRange, MaxRange));
+                tmpDataType = new DataType(type, "", 0, "", "", size, MinSize, MaxSize, MinRange, MaxRange);
+
+                //----------------------------------------------------
+                //-----------NEW SEQUENCE-----------------------------
+                //
+                //              ADD NEW SEQUENCE CODE!!!!
+                //
+                //----------------------------------------------------
+                //----------------------------------------------------
+
+                if (!this.doesDataTypeExist(tmpDataType))
+                {
+                    syntax = tmpDataType;
+                    DataTypesList.Add(syntax);
+                }
+                else
+                {
+                    syntax = tmpDataType;
+                }
             }
 
             access = Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[3].Value;
@@ -99,7 +113,7 @@ public class Parser
             description = Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[5].Value;
             Int32.TryParse(Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[7].Value , out OID);
 
-            wezly.Add(new Wezel(OID, name, syntax, access, status, parrent_name));
+            wezly.Add(new Wezel(OID, name, tmpDataType, access, status, parrent_name));
         }
 
         return wezly;
@@ -118,10 +132,9 @@ public class Parser
 
         string Identifier_pattern = @"(?<name>\S+)\s+OBJECT\sIDENTIFIER\s::=\s{\s(?<rodzic>\S+)\s(?<ID>\d+)\s}";
 
-        foreach (Match match in Regex.Matches(content, Identifier_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))    //ignorowanie wielkości znaków, odczyt tekstu jako jednej lini (enter jest tez znakiem '.')
+        foreach (Match match in Regex.Matches(content, Identifier_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))
         {
             obiekty.Add(match.Value);
-            //Console.WriteLine(match.Value);
         }
 
         foreach (string ob in obiekty)
@@ -132,7 +145,6 @@ public class Parser
 
             wezly.Add(new Wezel(OID, name, null , null, null, parrent_name));
         }
-
 
         /*foreach (Wezel w in wezly)
         {
@@ -191,9 +203,6 @@ public class Parser
                         insideFileNodes1 = newParser.pharseImport();
                         insideFileNodes2 = newParser.pharseObjectType();
                         insideFileNodes3 = newParser.pharseObjectIdentifier();
-                        //----------------------------------------------------------------------------------------
-                        //--------------------------------DODAĆ POZOSTAŁE PARSOWANIA------------------------------
-                        //----------------------------------------------------------------------------------------
                     }
                 }
                 catch (IOException e)
@@ -252,7 +261,6 @@ public class Parser
         long MinRange;
 
         string subcontent = "";
-        DataTypesList = new List<DataType>();
 
         try
         {
@@ -267,12 +275,11 @@ public class Parser
             Console.WriteLine(e.Message);
         }
 
-        //string DataType_pattern = @"(?<type>\S*)\s*::=\s*\[(?<DT_class>\S*)\s(?<tag>\d*)]\s*(--.*?\n\s*|\s*)(?<CodeingType>\S*)\s*(?<ancestorType>.*?)\s*(--|\((0..(?<range>\d+)|SIZE\s*\((?<size>\d+)\))\)|\n)";
         string DataType_pattern = @"(?<type>\S*)\s*::=\s*\[(?<DT_class>\S*)\s(?<tag>\d*)]\s*(--.*?\n\s*|\s*)(?<CodeingType>\S*)\s*(?<ancestorType>.*?)\s*(--|\n|\(((?<min_range>\d*..(?<max_range>\d*))\)|SIZE\s*\(((?<size>\d*)|((?<min_size>\d*)..(?<max_size>\d*)))\)\)))";
 
         foreach (Match ob in Regex.Matches(subcontent, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))
         {
-            type = Regex.Match(ob.Value, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[6].Value;     //odczyt poszczególnych danych z jednego węzła/obiektu w postaci stringa
+            type = Regex.Match(ob.Value, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[6].Value;
             DT_Class = Regex.Match(ob.Value, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[7].Value;
             Int32.TryParse(Regex.Match(ob.Value, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[8].Value, out tag);
             CodeingType = Regex.Match(ob.Value, DataType_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[9].Value;
@@ -309,12 +316,15 @@ public class Parser
 
         this.fileOpen();
 
+        //--------------------ADDING ROOT-------------------------------------
+        //--------------------------------------------------------------------
         drzewo.Add(new Wezel(1, "internet", null, null, null, "dod"));
         drzewo.Add(new Wezel(6, "dod", null, null, null, "org"));
         drzewo.Add(new Wezel(3, "org", null, null, null, "iso"));
-        drzewo.Add(new Wezel(1, "iso", null, null, null, null));  //korzeń
+        drzewo.Add(new Wezel(1, "iso", null, null, null, null));
+        //--------------------------------------------------------------------
 
-        foreach(Wezel w in this.pharseImport())
+        foreach (Wezel w in this.pharseImport())
         {
             drzewo.Add(w);
         }
@@ -332,14 +342,15 @@ public class Parser
         return drzewo;
     }
 
-    public void pharseSequences()   //DO ZDEBUGOWANIA!!!!
+    public void pharseSequences()
     {
         string sequence_pattern = @"(?<sequence_type>\S*)\s*::=\s*SEQUENCE\s*{\s*((?<members>.*?)})";
-        string member_pattern = @"(?<type>\S*)\s*(?<class>\S*)(,\s*|(\s\((?<min_range>\d*)..(?<max_range>\d*)\)(,\s*|\n))|(\s\(SIZE\((?<size>\d*)\)\)(,\s*|\n))|(\s\(SIZE\((?<min_size>\d*)..(?<max_size>\d*)\)\))(,\s*|\n))";
-        
+        string member_pattern = @"(?<type>\S*)\s*(?<class>\S*)(,\s*|(\s\((?<min_range>\d*)..(?<max_range>\d*)\)(,\s*|\s*))|(\s\(SIZE\((?<size>\d*)\)\)(,\s*|\s*))|(\s\(SIZE\((?<min_size>\d*)..(?<max_size>\d*)\)\))(,\s*|\s*)|(\s*}))";
+
         //---------------NEW SEQUENCE------------------
         DataType sequence;
         string sequenceType;
+        //---------------------------------------------
 
         //---------------SEQUENCE MEMBER---------------
         DataType sequenceMember;
@@ -351,31 +362,51 @@ public class Parser
         int Size;
         int MaxSize;
         int MinSize;
+        //---------------------------------------------
 
-               
+
         foreach (Match ob in Regex.Matches(content, sequence_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))
         {
-            sequenceType = Regex.Match(ob.Value, sequence_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
+            sequenceType = Regex.Match(ob.Value, sequence_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[2].Value;
 
             sequence = new DataType(sequenceType, "", 0, "", "", 0, 0, 0, 0, 0);
 
             foreach (Match obj in Regex.Matches(ob.Value, member_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))
             {
-                //--------------SETTING MEMBERS PARAMETERS-------------------
+                //--------------------------------------------------------------------------SETTING MEMBERS PARAMETERS-----------------------------------------------------------
+                //---------------------------------------------------------------------------------------------------------------------------------------------------------------
+                if (Regex.Match(obj.Value, member_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[9].Value != "")
+                {
+                    MemberType = Regex.Match(obj.Value, member_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[9].Value;
+                    MemberClass = Regex.Match(obj.Value, member_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[10].Value;
+                    Int64.TryParse(Regex.Match(obj.Value, member_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[12].Value, out MaxRange);
+                    Int64.TryParse(Regex.Match(obj.Value, member_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[11].Value, out MinRange);
+                    Int32.TryParse(Regex.Match(obj.Value, member_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[13].Value, out Size);
+                    Int32.TryParse(Regex.Match(obj.Value, member_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[15].Value, out MaxSize);
+                    Int32.TryParse(Regex.Match(obj.Value, member_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[14].Value, out MinSize);
 
-                MemberType = Regex.Match(obj.Value, member_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value;
-                MemberClass = Regex.Match(obj.Value, member_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[2].Value;
-                MaxRange = 0;
-                MinRange = 0;
-                Size = 0;
-                MaxSize = 0;
-                MinSize = 0;
-
-                sequenceMember = new DataType(MemberType, MemberClass, 0, "", "", Size, MinSize, MaxSize, MinRange, MaxRange);
-                sequence.AddDataTypeToSequence(sequenceMember);
+                    sequenceMember = new DataType(MemberType, MemberClass, 0, "", "", Size, MinSize, MaxSize, MinRange, MaxRange);
+                    sequence.AddDataTypeToSequence(sequenceMember);
+                }
             }
 
             DataTypesList.Add(sequence);
         }
+    }
+
+
+    public bool doesDataTypeExist(DataType dt)
+    {
+        bool doesExist = false;
+
+        foreach(DataType d in DataTypesList)
+        {
+            if(d == dt)
+            {
+                doesExist = true;
+            }
+        }
+
+        return doesExist;
     }
 }

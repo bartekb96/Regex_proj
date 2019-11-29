@@ -6,7 +6,7 @@ using System.Text;
 public class DataType
 {
     public string type;
-    public string DT_Class; //data type class, czyli w sumie Klasa
+    public string DT_Class;
     public int tag;
     public string CodeingType;
     public string ancestorType;

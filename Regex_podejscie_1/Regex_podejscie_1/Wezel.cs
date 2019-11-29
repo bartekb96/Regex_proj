@@ -5,14 +5,14 @@ public class Wezel
 {
     public int ID;
     public string name;
-    public string syntax;
+    public DataType syntax;
     public string access;
     public string status;
     public string parrent_name;
 
     public LinkedList<Wezel> children;
 
-    public Wezel(int iod, string name, string sntx, string accs, string stat, string parrent)
+    public Wezel(int iod, string name, DataType sntx, string accs, string stat, string parrent)
     {
         this.ID = iod;
         this.name = name;
