@@ -1,0 +1,48 @@
+    SYNTAX  INTEGER (0..65535)
+
+    SYNTAX  INTEGER {
+                idle(1),
+                acquisition(2),
+                down(3),	-- Van Jacobson's algorithm [10]
+                up(4),		-- Van Jacobson's algorithm [10]
+                cease(5)
+        }
+			
+			
+    SYNTAX  SEQUENCE OF UdpEntry
+
+
+    SYNTAX   IDENTIFIER
+
+
+    SYNTAX  INTEGER {
+                other(1),       -- none of the following
+
+                                -- non-protocol information,
+                                -- e.g., manually configured
+                local(2),       -- entries
+
+                                -- set via a network
+                netmgmt(3),     -- management protocol
+
+                                -- obtained via ICMP,
+                icmp(4),        -- e.g., Redirect
+
+                                -- the remaining values are
+                                -- all gateway routing
+                                -- protocols
+                egp(5),
+                ggp(6),
+                hello(7),
+                rip(8),
+                is-is(9),
+                es-is(10),
+                ciscoIgrp(11),
+                bbnSpfIgp(12),
+                ospf(13),
+                bgp(14)
+            }
+			
+    SYNTAX  DisplayString (SIZE (0..255))
+	
+	SYNTAX  DisplayString (SIZE (4))

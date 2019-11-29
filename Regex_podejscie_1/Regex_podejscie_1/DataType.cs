@@ -34,4 +34,8 @@ public class DataType
         MaxRange = _MaxRange;
     }
 
+    public void AddDataTypeToSequence(DataType member)
+    {
+        Sequence.Add(member);
+    }
 }
