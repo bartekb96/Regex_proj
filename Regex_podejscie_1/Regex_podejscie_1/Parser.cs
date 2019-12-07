@@ -36,6 +36,7 @@ public class Parser
     public List<Wezel> pharseObjectType()
     {
         List<Wezel> wezly = new List<Wezel>();
+        List<DataType> tmpDataTypeList = new List<DataType>();
 
         int OID;
         string name;
@@ -48,22 +49,23 @@ public class Parser
         //------NEW DATA TYPE--------
         DataType tmpDataType = new DataType("", "", 0, "", "", 0, 0, 0, 0, 0);
 
-        string type;
-        int size;
-        int MaxSize;
-        int MinSize;
+        string type = "";
+        int size = 0;
+        int MaxSize = 0;
+        int MinSize = 0;
 
-        long MaxRange;
-        long MinRange;
+        long MaxRange = 0;
+        long MinRange = 0;
 
-        string sequence;
-        string sequenceName;
+        string sequence = "";
+        string sequenceName = "";
         //---------------------------
 
         List<string> obiekty = new List<string>();
 
         string Node_pattern = @"(?<name>\S+)\sOBJECT-TYPE\s*SYNTAX\s+(?<syntax>.*?)\s*ACCESS\s+(?<access>\S*)\s+STATUS\s+(?<status>\w*)\s*DESCRIPTION\s*(?<description>.*?)::=\s{\s(?<rodzic>\S*)\s(?<OID>\d+)\s}";
-        string Syntax_pattern = @"SYNTAX\s*(SEQUENCE\sOF\s*(?<sequence_name>\S*)|((?<type1>\S*)\s*(\n|(\((?<min_range>\d*..(?<max_range>\d*)\)))|(\(SIZE\s\((?<min_size>\d*)..(?<max_size>\d*)\)\))|(\(SIZE\s*\((?<size>\d*)\)\))|({\n(?<sequence>.*?)}))))";
+        //string Syntax_pattern = @"SYNTAX\s*(SEQUENCE\sOF\s*(?<sequence_name>\S*)|((?<type1>\S*)\s*(\n|(\((?<min_range>\d*..(?<max_range>\d*)\)))|(\(SIZE\s\((?<min_size>\d*)..(?<max_size>\d*)\)\))|(\(SIZE\s*\((?<size>\d*)\)\))|({\n(?<sequence>.*?)}))))";
+        string Syntax_pattern = @"SYNTAX\s*(SEQUENCE\sOF\s*(?<sequence_name>\S*)|((?<type1>\S*)\s*(\n|(\((?<min_range>\d*)..(?<max_range>\d*)\))|(\(SIZE\s\((?<min_size>\d*)..(?<max_size>\d*)\)\))|(\(SIZE\s*\((?<size>\d*)\)\))|(\{.*?\}))))";
 
         foreach (Match match in Regex.Matches(content, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))
         {
@@ -81,6 +83,10 @@ public class Parser
                 sequenceName = Regex.Match(obj.Value, Syntax_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[8].Value;
                 sequence = Regex.Match(obj.Value, Syntax_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[15].Value;
                 type = Regex.Match(obj.Value, Syntax_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[9].Value;
+                    if(type == "")
+                    {
+                        type = sequenceName;
+                    }
                 Int64.TryParse(Regex.Match(obj.Value, Syntax_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[10].Value, out MinRange);
                 Int64.TryParse(Regex.Match(obj.Value, Syntax_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[11].Value, out MaxRange);
                 Int32.TryParse(Regex.Match(obj.Value, Syntax_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[14].Value, out size);
@@ -88,16 +94,16 @@ public class Parser
                 Int32.TryParse(Regex.Match(obj.Value, Syntax_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[13].Value, out MaxSize);
 
                 tmpDataType = new DataType(type, "", 0, "", "", size, MinSize, MaxSize, MinRange, MaxRange);
+                tmpDataTypeList.Add(tmpDataType);
 
                 //----------------------------------------------------
                 //-----------NEW SEQUENCE-----------------------------
                 //
-                //              ADD NEW SEQUENCE CODE!!!!
+                //              NO NEED OF NEW SEQUENTIONS
                 //
                 //----------------------------------------------------
                 //----------------------------------------------------
-
-                if (!this.doesDataTypeExist(tmpDataType))
+                if (this.findTheSameDataType(tmpDataType) == null)
                 {
                     syntax = tmpDataType;
                     DataTypesList.Add(syntax);
@@ -395,18 +401,20 @@ public class Parser
     }
 
 
-    public bool doesDataTypeExist(DataType dt)
+
+    //COŚ NIE DZIAŁA - ZLOKALIZOWAĆ CO
+    public DataType findTheSameDataType(DataType dt)
     {
-        bool doesExist = false;
+        //DataType tmpDT = new DataType("", "", 0, "", "", 0, 0, 0, 0, 0);
 
         foreach(DataType d in DataTypesList)
         {
-            if(d == dt)
+            if(d.type == dt.type && d.size == dt.size && d.MinSize == dt.MinSize && d.MinRange == dt.MinRange && d.MaxSize == dt.MaxSize && d.MaxRange == dt.MaxRange)
             {
-                doesExist = true;
+                return d;
             }
         }
 
-        return doesExist;
+        return null;
     }
 }

@@ -20,7 +20,7 @@ namespace Regex_podejscie_1
             TreeBrowser szukacz = new TreeBrowser(drzewo);
             szukacz.addParrent(drzewo);
 
-
+            Wezel test = szukacz.findByOid("1.3.6.1.2.1.5");
 
             /*foreach (Wezel w in drzewo)
             {
@@ -33,6 +33,8 @@ namespace Regex_podejscie_1
                     Console.WriteLine("-----------------------------------");
                 }
             }*/
+
+            Console.ReadKey();
         }
     }
 }

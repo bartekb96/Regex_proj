@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class TreeBrowser
 {
@@ -48,34 +49,62 @@ public class TreeBrowser
             return null;
     }
 
-
-    //funkcja do wywalenia
-    public List<int> findLongOID(string name)
+    public Wezel findByOid(string OID)
     {
-        List<int> oid = new List<int>();
-        Wezel szukany = new Wezel(0, "szukany", null, "szukany", "szukany", "szukany");
-        bool doesExist = false;
+        string idPattern = @"(?<id>\d*)(\.|\s*)";
 
-        foreach(Wezel w in liscie)
+        int idSize = Regex.Matches(OID, idPattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Count - 1;
+
+        int[] localId = new int[idSize];
+
+        int arrayIndex = 0;
+
+        foreach(Match m in Regex.Matches(OID, idPattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))
         {
-            if(w.name == name)
+            if(arrayIndex < idSize)
             {
-                szukany = w;
-                doesExist = true;
+                Int32.TryParse(Regex.Match(m.Value, @"\d*", RegexOptions.IgnoreCase | RegexOptions.Singleline).Value, out localId[arrayIndex]);
+                arrayIndex++;
             }
         }
 
-        if(doesExist)
-        {
-            oid.Add(szukany.ID);
+        arrayIndex = 0;
 
-        }
-        else
+        Wezel tmp = getChildById(this.getRoot(), localId[arrayIndex + 1]);
+        arrayIndex++;
+
+        for (int i=1; i<idSize-1; i++)
         {
-            return null;
+            tmp = getChildById(tmp, localId[arrayIndex+1]);
+            arrayIndex++;
         }
 
-        return oid;
+        return tmp;
+    }
+
+    public Wezel getChildById(Wezel parrent, int childId)
+    {
+        foreach(Wezel child in parrent.children)
+        {
+            if(child.ID == childId)
+            {
+                return child;
+            }
+        }
+
+        Console.WriteLine(parrent.name + " hasn't got child with ID: " + childId);
+        return null;
+    }
+
+    public Wezel getRoot()
+    {
+        foreach(Wezel w in liscie)
+        {
+            if (w.name == "iso")
+                return w;
+        }
+
+        return null;
     }
 
     public void addParrent(List<Wezel> l)
