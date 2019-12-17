@@ -41,7 +41,7 @@ public class Parser
         int OID;
         string name;
         string parrent_name;
-        DataType syntax;
+        DataType syntax = new DataType("", "", 0, "", "", 0, 0, 0, 0, 0);
         string access;
         string description;
         string status;
@@ -49,16 +49,16 @@ public class Parser
         //------NEW DATA TYPE--------
         DataType tmpDataType = new DataType("", "", 0, "", "", 0, 0, 0, 0, 0);
 
-        string type = "";
-        int size = 0;
-        int MaxSize = 0;
-        int MinSize = 0;
+        string type;
+        int size;
+        int MaxSize;
+        int MinSize;
 
-        long MaxRange = 0;
-        long MinRange = 0;
+        long MaxRange;
+        long MinRange;
 
-        string sequence = "";
-        string sequenceName = "";
+        string sequence;
+        string sequenceName;
         //---------------------------
 
         List<string> obiekty = new List<string>();
@@ -110,7 +110,8 @@ public class Parser
                 }
                 else
                 {
-                    syntax = tmpDataType;
+                    //syntax = tmpDataType;
+                    syntax = this.findTheSameDataType(tmpDataType);
                 }
             }
 
@@ -119,7 +120,7 @@ public class Parser
             description = Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[5].Value;
             Int32.TryParse(Regex.Match(ob, Node_pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[7].Value , out OID);
 
-            wezly.Add(new Wezel(OID, name, tmpDataType, access, status, parrent_name));
+            wezly.Add(new Wezel(OID, name, syntax, access, status, parrent_name));
         }
 
         return wezly;
@@ -267,7 +268,7 @@ public class Parser
         long MinRange;
 
         string subcontent = "";
-
+        
         try
         {
             using (StreamReader sr = new StreamReader(@"C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\RFC1155-SMI.txt"))
@@ -280,6 +281,12 @@ public class Parser
             Console.WriteLine("CANNOT PHARSE DATA TYPE! :");
             Console.WriteLine(e.Message);
         }
+
+        DataTypesList.Add(new DataType("DisplayString", "", 0, "", "OCTET STRING", 0, 0, 255, 0, 0));
+        DataTypesList.Add(new DataType("PhysAddress", "", 0, "", "OCTET STRING", 0, 0, 0, 0, 0));
+        DataTypesList.Add(new DataType("INTEGER", "", 2, "", "", 0, 0, 0, -2147483648, 2147483647));
+        DataTypesList.Add(new DataType("OCTET STRING", "", 4, "", "", 4, 0, 0, 0, 0));
+        DataTypesList.Add(new DataType("NULL", "", 5, "", "", 0, 0, 0, 0, 0));
 
         string DataType_pattern = @"(?<type>\S*)\s*::=\s*\[(?<DT_class>\S*)\s(?<tag>\d*)]\s*(--.*?\n\s*|\s*)(?<CodeingType>\S*)\s*(?<ancestorType>.*?)\s*(--|\n|\(((?<min_range>\d*..(?<max_range>\d*))\)|SIZE\s*\(((?<size>\d*)|((?<min_size>\d*)..(?<max_size>\d*)))\)\)))";
 
@@ -409,10 +416,29 @@ public class Parser
 
         foreach(DataType d in DataTypesList)
         {
-            if(d.type == dt.type && d.size == dt.size && d.MinSize == dt.MinSize && d.MinRange == dt.MinRange && d.MaxSize == dt.MaxSize && d.MaxRange == dt.MaxRange)
+            //if(d.type == dt.type && d.size == dt.size && d.MinSize == dt.MinSize && d.MinRange == dt.MinRange && d.MaxSize == dt.MaxSize && d.MaxRange == dt.MaxRange)
+            /*if(d.type == dt.type)
+            {
+                if(dt.size == 0 && dt.MinSize == 0 && dt.MinRange == 0 && dt.MaxSize == 0 && dt.MaxRange == 0)
+                {
+                    return d;
+                }
+            }*/
+
+
+
+            if (dt.size == 0 && dt.MinSize == 0 && dt.MinRange == 0 && dt.MaxSize == 0 && dt.MaxRange == 0)
+            {
+                if(d.type == dt.type)
+                {
+                    return d;
+                }
+            }
+            else if(d.type == dt.type && d.size == dt.size && d.MinSize == dt.MinSize && d.MinRange == dt.MinRange && d.MaxSize == dt.MaxSize && d.MaxRange == dt.MaxRange)
             {
                 return d;
             }
+
         }
 
         return null;

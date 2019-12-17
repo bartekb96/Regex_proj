@@ -75,8 +75,15 @@ public class TreeBrowser
 
         for (int i=1; i<idSize-1; i++)
         {
-            tmp = getChildById(tmp, localId[arrayIndex+1]);
-            arrayIndex++;
+            if(tmp != null)
+            {
+                tmp = getChildById(tmp, localId[arrayIndex + 1]);
+                arrayIndex++;
+            }
+            else
+            {
+                Console.WriteLine("Obiekt o podanym OID nie istnieje!");
+            }
         }
 
         return tmp;

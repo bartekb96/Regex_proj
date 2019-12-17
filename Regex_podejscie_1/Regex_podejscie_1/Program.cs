@@ -20,19 +20,10 @@ namespace Regex_podejscie_1
             TreeBrowser szukacz = new TreeBrowser(drzewo);
             szukacz.addParrent(drzewo);
 
-            Wezel test = szukacz.findByOid("1.3.6.1.2.1.5");
+            //Wezel test = szukacz.findByOid("1.3.6.1.2.1.5.19");
 
-            /*foreach (Wezel w in drzewo)
-            {
-                if (w.children.Count != 0)
-                {
-                    foreach (Wezel dziecko in w.children)
-                    {
-                        Console.WriteLine(w.name + " MA DZIECKO: " + dziecko.name);
-                    }
-                    Console.WriteLine("-----------------------------------");
-                }
-            }*/
+            Walidator W1 = new Walidator("1.3.6.1.2.1.5.19", 4294967294, drzewo);
+            Console.WriteLine(W1.validade());
 
             Console.ReadKey();
         }
