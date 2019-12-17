@@ -136,4 +136,22 @@ public class TreeBrowser
             }
         }
     }
+
+    public string getFullOid (string name)
+    {
+        Wezel w = this.findByName(name);
+        string tmpOid = w.ID.ToString();
+
+        Wezel tmpParrent = findByName(w.parrent_name);
+
+        while(tmpParrent.name != "iso")
+        {
+            tmpOid += "." + tmpParrent.ID.ToString();
+            tmpParrent = findByName(tmpParrent.parrent_name);
+        }
+
+        tmpOid += ".1";
+
+        return tmpOid;
+    }
 }

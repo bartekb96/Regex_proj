@@ -180,40 +180,48 @@ public class Walidator
         }
         else // sequence.count != 0
         {
+            //for(int i = 0; i<w.syntax.Sequence.Count; i++)
             foreach(DataType dt in w.syntax.Sequence)
             {
                 long userInput;
 
-                Console.WriteLine("PODAJ WARTOSC DO WALIDACJI DLA PODANYCH OGRANICZEN:");
-                Console.WriteLine("Minimalna warosc liczby: " + dt.MinRange);
-                Console.WriteLine("Maksymalna warosc liczby: " + dt.MaxRange);
-                Console.WriteLine("Minimalny rozmiar liczby (w bajtach): " + dt.MinSize);
-                Console.WriteLine("Maksymalny rozmiar liczby (w bajtach): " + dt.MaxSize);
-                Console.WriteLine("Rozmiar liczby (w bajtach): " + dt.size);
+                Console.WriteLine(dt.type);
+                {
+                    Console.WriteLine("PODAJ WARTOSC DO WALIDACJI DLA PODANYCH OGRANICZEN:");
+                    Console.WriteLine("Minimalna warosc liczby: " + dt.MinRange);
+                    Console.WriteLine("Maksymalna warosc liczby: " + dt.MaxRange);
+                    Console.WriteLine("Minimalny rozmiar liczby (w bajtach): " + dt.MinSize);
+                    Console.WriteLine("Maksymalny rozmiar liczby (w bajtach): " + dt.MaxSize);
+                    Console.WriteLine("Rozmiar liczby (w bajtach): " + dt.size);
+                }
 
-                Console.Write("Twoje dane: ");
+                Console.WriteLine("Twoje dane: ");
                 userInput = Console.Read();
 
-                long userSize = System.Runtime.InteropServices.Marshal.SizeOf(userInput);
+                while(Console.ReadKey(true).Key != ConsoleKey.Enter) ;
+
+                Console.Clear();
+
+                /*long userSize = System.Runtime.InteropServices.Marshal.SizeOf(userInput);
 
                 if ((dt.MinRange !=0 || dt.MaxRange != 0) && !(dt.MinRange <= userInput && userInput <= dt.MaxRange))
                 {
                     Console.WriteLine("NIEPRAWIDLOWE DANE!!! PODAJ DANE PONOWNIE!");
-                    Console.Write("Twoje dane: ");
+                    Console.WriteLine("Twoje dane: ");
                     userInput = Console.Read();
                 }
                 else if ((dt.MinSize != 0 || dt.MaxSize != 0) && !(dt.MinSize <= userSize && userSize <= dt.MaxSize))
                 {
                     Console.WriteLine("NIEPRAWIDLOWE DANE!!! PODAJ DANE PONOWNIE!");
-                    Console.Write("Twoje dane: ");
+                    Console.WriteLine("Twoje dane: ");
                     userInput = Console.Read();
                 }
                 else if(dt.size != 0 && userSize != dt.size)
                 {
                     Console.WriteLine("NIEPRAWIDLOWE DANE!!! PODAJ DANE PONOWNIE!");
-                    Console.Write("Twoje dane: ");
+                    Console.WriteLine("Twoje dane: ");
                     userInput = Console.Read();
-                }
+                }*/
             }
         }
 
