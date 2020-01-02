@@ -180,12 +180,14 @@ public class Walidator
         }
         else // sequence.count != 0
         {
-            //for(int i = 0; i<w.syntax.Sequence.Count; i++)
-            foreach(DataType dt in w.syntax.Sequence)
-            {
-                long userInput;
+            long userInput;
 
-                Console.WriteLine(dt.type);
+            //for(int i = 0; i<w.syntax.Sequence.Count; i++)
+            foreach (DataType dt in w.syntax.Sequence)
+            {
+                userInput = default(long);
+
+                Console.WriteLine(dt.type + " DZIEDZICZY OD: " + dt.ancestorType);
                 {
                     Console.WriteLine("PODAJ WARTOSC DO WALIDACJI DLA PODANYCH OGRANICZEN:");
                     Console.WriteLine("Minimalna warosc liczby: " + dt.MinRange);
@@ -196,13 +198,11 @@ public class Walidator
                 }
 
                 Console.WriteLine("Twoje dane: ");
-                userInput = Console.Read();
-
-                while(Console.ReadKey(true).Key != ConsoleKey.Enter) ;
+                Int64.TryParse(Console.ReadLine(), out userInput);
 
                 Console.Clear();
 
-                /*long userSize = System.Runtime.InteropServices.Marshal.SizeOf(userInput);
+                long userSize = System.Runtime.InteropServices.Marshal.SizeOf(userInput);
 
                 if ((dt.MinRange !=0 || dt.MaxRange != 0) && !(dt.MinRange <= userInput && userInput <= dt.MaxRange))
                 {
@@ -221,7 +221,7 @@ public class Walidator
                     Console.WriteLine("NIEPRAWIDLOWE DANE!!! PODAJ DANE PONOWNIE!");
                     Console.WriteLine("Twoje dane: ");
                     userInput = Console.Read();
-                }*/
+                }
             }
         }
 
