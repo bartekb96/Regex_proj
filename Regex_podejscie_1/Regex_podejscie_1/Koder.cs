@@ -33,6 +33,7 @@ public class Koder
         this.klasa = _klasa;
         this.primitiveOrConstructed = _primitiveOrConstructed;
         this.setIdentyficaotr();
+        this.setLengthAmdContent();
     }
 
     private void setIdentyficaotr()
@@ -119,7 +120,7 @@ public class Koder
             //----------TAG SETTING---------------------
             int len = getBitsAmount(tag);
 
-            _identificator[nOctets-1] = (byte)(_identificator[nOctets-1] | (0 << 7));
+            _identificator[nOctets-1] = (byte)(_identificator[nOctets-1] & ~(1 << 7));
             _identificator[nOctets - 1] = (byte)(_identificator[nOctets - 1] | (bitExtracted(tag, len - 7*(nOctets - 2), 1) << (7-(len - 7 * (nOctets - 2)))));
 
             for (int i = 1; i < nOctets -1; i++)
@@ -128,9 +129,62 @@ public class Koder
                 _identificator[i] = (byte)(_identificator[i] | (bitExtracted(tag, 7, len - i*7 + 1) << 0));
             }
 
+            //konkatenacja bajtów tworzących identyfikator
+            for (int i = 0; i < nOctets; i++)
+            {
+                this.identyficator += (int)Math.Pow(256, nOctets-1-i) * (int)_identificator[i];
+            }
         }
 
+    }
 
+    private void setLengthAmdContent()
+    {
+        double _len = (double)getBitsAmountLong(this.content)/(double)8;
+        long _lenghtInBytes = (long)Math.Ceiling(_len) +1;
+
+        int len = getBitsAmount((int)this.content);
+
+        if (_lenghtInBytes -1 < 128)
+        {
+            byte[] frame = new byte[_lenghtInBytes];
+
+            //pierwszy oktet, kodowanie długości
+            frame[0] = (byte)(frame[0] & ~(1 << 7));
+            frame[0] = (byte)(frame[0] | (bitExtracted(len, 7, 1) << 0));
+
+            //kodowanie zawartości
+            frame[_lenghtInBytes - 1] = (byte)(frame[_lenghtInBytes - 1] | (bitExtracted((int)this.content, len - 8 * ((int)_lenghtInBytes - 2), 1) << (8 - (len - 8 * ((int)_lenghtInBytes - 2)))));
+
+            for (int i = 1; i < _lenghtInBytes - 1; i++)
+            {
+                frame[i] = (byte)(frame[i] | (bitExtracted((int)this.content, 8, len - i * 8 + 1) << 0));
+            }
+
+        }
+        else if(_lenghtInBytes-1 > 128 && _lenghtInBytes-1 < Math.Pow(2, 1008))
+        {
+            int contentLenght = (int)getBitsAmountLong(this.content);
+            int lenghtOfTheLenght = getBitsAmount(contentLenght);
+            int totalLenght = contentLenght + lenghtOfTheLenght;
+
+            int contentLenghtBytes = (int)Math.Ceiling((double)contentLenght / (double)8);
+            int lenghtOfTheLenghtBytes = (int)Math.Ceiling((double)lenghtOfTheLenght / (double)8);
+            int totalLenghtBytes = contentLenghtBytes + lenghtOfTheLenghtBytes + 1;
+
+            byte[] frame = new byte[totalLenghtBytes];
+
+            //pierwszy oktet
+            frame[0] = (byte)(frame[0] | (1 << 7));
+            frame[0] = (byte)(frame[0] | (bitExtracted(lenghtOfTheLenght, 7, 1) << 0));
+
+            //kodowanie długości
+
+        }
+        else
+        {
+            Console.WriteLine("ZA DUZY ROZMIAR DANYCH!");
+        }
     }
 
     public void printIdentycicator()
@@ -147,6 +201,21 @@ public class Koder
     {
         int amount = 0;
         int tmp = tag;
+
+        do
+        {
+            tmp = tmp / 2;
+            amount++;
+        }
+        while (tmp > 0);
+
+        return amount;
+    }
+
+    private long getBitsAmountLong(long content)
+    {
+        long amount = 0;
+        long tmp = content;
 
         do
         {

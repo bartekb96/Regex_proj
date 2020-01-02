@@ -30,7 +30,7 @@ namespace Regex_podejscie_1
             //Walidator W1 = new Walidator("1.3.6.1.2.1.2.2.1", 4294967294, drzewo);      //walidowanie sekwencji
             //W1.validade();
 
-            Koder koder = new Koder(11635492, 325, 2, 0);
+            Koder koder = new Koder(196, 3252, 2, 0);
             Console.Write("identyfikator: ");
             koder.printIdentycicator();
 
