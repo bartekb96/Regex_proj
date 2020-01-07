@@ -11,7 +11,8 @@ namespace Regex_podejscie_1
             List<Wezel> drzewo = new List<Wezel>();
             List<DataType> datas = new List<DataType>();
 
-            Parser parser = new Parser(@"C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\RFC1213-MIB.txt");
+            //Parser parser = new Parser(@"C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\RFC1213-MIB.txt");
+            Parser parser = new Parser(@"C:\Users\Marianka\Desktop\Bartek\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\RFC1213-MIB.txt");
             parser.fileOpen();
             parser.pharseSequences();
             parser.pharseDataType();

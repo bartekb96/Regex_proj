@@ -77,7 +77,7 @@ public class Koder
         }
         else //----------TAG >= 31 ---------------------
         {
-            double result = (double)(getBitsAmount(tag) / (double)7);
+            double result = (double)(getBitsAmount(tag) / (double)7);   //ile bajtów zajmie tag
             int nOctets = (int)Math.Ceiling(result) + 1;
 
             byte[] _identificator = new byte[nOctets];
@@ -120,10 +120,10 @@ public class Koder
             //----------TAG SETTING---------------------
             int len = getBitsAmount(tag);
 
-            _identificator[nOctets-1] = (byte)(_identificator[nOctets-1] & ~(1 << 7));
-            _identificator[nOctets - 1] = (byte)(_identificator[nOctets - 1] | (bitExtracted(tag, len - 7*(nOctets - 2), 1) << (7-(len - 7 * (nOctets - 2)))));
+            _identificator[nOctets-1] = (byte)(_identificator[nOctets-1] & ~(1 << 7));      //ustaw 0 w ósmym bicie ostatniego oktetu
+            _identificator[nOctets - 1] = (byte)(_identificator[nOctets - 1] | (bitExtracted(tag, 7, 1) << 0));
 
-            for (int i = 1; i < nOctets -1; i++)
+            for (int i = 1; i < nOctets -1; i++)  //do poprawy!!!
             {
                 _identificator[i] = (byte)(_identificator[i] | (1 << 7));
                 _identificator[i] = (byte)(_identificator[i] | (bitExtracted(tag, 7, len - i*7 + 1) << 0));

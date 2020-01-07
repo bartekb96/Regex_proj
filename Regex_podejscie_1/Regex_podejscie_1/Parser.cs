@@ -197,7 +197,8 @@ public class Parser
 
         foreach (string s in importsList)
         {
-            string path = @"C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\" + s;
+            //string path = @"C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\" + s;
+            string path = @"C:\Users\Marianka\Desktop\Bartek\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\" + s;
 
             if (File.Exists(path))
             {
@@ -271,7 +272,8 @@ public class Parser
         
         try
         {
-            using (StreamReader sr = new StreamReader(@"C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\RFC1155-SMI.txt"))
+            //using (StreamReader sr = new StreamReader(@"C:\Users\Bartek\source\repos\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\RFC1155-SMI.txt"))
+            using (StreamReader sr = new StreamReader(@"C:\Users\Marianka\Desktop\Bartek\Regex_proj\Regex_podejscie_1\Regex_podejscie_1\RFC1155-SMI.txt"))
             {
                 subcontent = sr.ReadToEnd();
             }
