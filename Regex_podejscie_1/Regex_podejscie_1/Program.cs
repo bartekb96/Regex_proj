@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace Regex_podejscie_1
 {
@@ -31,9 +32,8 @@ namespace Regex_podejscie_1
             //W1.validade();
 
             Koder koder = new Koder();
-            koder.setParams(196, 3252, 2, 0);
-            koder.codeUniversal();
-
+            koder.setParams(4, "kasztan", 0, 0, false);
+            koder.code();
 
             Console.ReadKey();
         }
