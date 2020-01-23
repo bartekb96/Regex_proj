@@ -31,16 +31,22 @@ namespace Regex_podejscie_1
             //Walidator W1 = new Walidator("1.3.6.1.2.1.2.2.1", 4294967294, drzewo);      //walidowanie sekwencji
             //W1.validade();
 
-
-
+            //KODOWANIE ELEMENTOW
             /*Koder koder = new Koder();
             koder.setParams(4, "kasztan", 0, 0, false);
             koder.code();*/
 
-            Koder koder = new Koder();
-            koder.setParams(4, "kasztan", 0, 0, true);
-            koder.code();
 
+            //KODOWANIE SEKWENCJI
+            /*Koder koder = new Koder();
+            koder.setParams(4, "kasztan", 0, 0, true);
+            koder.code();*/
+
+            //KODOWANIE OBJECT IDENTIFIER
+            Koder koder = new Koder();
+            koder.setTree(drzewo);
+            koder.setParams(6, "1.3.6.1.4.1", 1, false);
+            koder.code();
 
             Console.ReadKey();
         }

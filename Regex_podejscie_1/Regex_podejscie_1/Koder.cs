@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 public class Koder
 {
@@ -20,18 +21,21 @@ public class Koder
         Constructed = 1
     };*/
 
+    private List<Wezel> drzewo = new List<Wezel>();
+
     private int tag;
     private int content;
     private string string_content;
     private int klasa;
     private int primitiveOrConstructed;
+    private string OID;
 
     private List<byte> lengthAndContent = new List<byte>();
     private List<byte> identyficator = new List<byte>();
 
     public static List<List<byte>> sequence = new List<List<byte>>();
     public static List<byte> finalSequence = new List<byte>();
-    public static int startedSequences = 1;
+    public static int startedSequences = 0;
 
     bool doCodeSequence;
 
@@ -90,6 +94,15 @@ public class Koder
         this.primitiveOrConstructed = _primitiveOrConstructed;
         this.doCodeSequence = _codeSequence;
     }
+
+    public void setParams(int _Tag, string oid, int value, bool _codeSequence)
+    {
+        this.tag = _Tag;
+        this.OID = oid;
+        this.content = value;
+        this.doCodeSequence = _codeSequence;
+    }
+
     private List<byte> codeUniversal()
     {
         List<byte> lst = new List<byte>();
@@ -253,17 +266,47 @@ public class Koder
         return lst;
     }
 
-    private List<byte> codeObjectIdentifier()  //dokończyć
+    private List<byte> codeObjectIdentifier()
     {
         List<byte> lst = new List<byte>();
+        Walidator w1 = new Walidator(this.OID, content, drzewo);
 
-        Console.WriteLine("codeObjectIdentifier");
+        string idPattern = @"(?<id>\d*)(\.|\s*)";
+        int idSize = Regex.Matches(OID, idPattern, RegexOptions.IgnoreCase | RegexOptions.Singleline).Count - 1;
+        int[] localId = new int[idSize];
+        int arrayIndex = 0;
+
+        foreach (Match m in Regex.Matches(OID, idPattern, RegexOptions.IgnoreCase | RegexOptions.Singleline))
+        {
+            if (arrayIndex < idSize)
+            {
+                Int32.TryParse(Regex.Match(m.Value, @"\d*", RegexOptions.IgnoreCase | RegexOptions.Singleline).Value, out localId[arrayIndex]);
+                arrayIndex++;
+            }
+        }
+
+        //TWORZENIE RAMKI
+        lst.Add(6);
+        lst.Add(Convert.ToByte(idSize-1));
+        lst.Add(43);
+            
+        for (int i=2; i<localId.Count(); i++)
+        {
+            lst.Add(Convert.ToByte(localId[i]));
+        }
+
+        //Data Visualization
+        foreach (byte b in lst)
+        {
+            Console.Write(b + "  ");
+        }
 
         return lst;
     }
 
-    private void codeSequence()  //dokończyć
+    private void codeSequence()  
     {
+        startedSequences++;
         sequence.Add(new List<byte>());
         Console.WriteLine("ROZPOCZALES KODOWANIE SEKWENCJI");
 
@@ -637,6 +680,11 @@ public class Koder
         while (tmp > 0);
 
         return amount;
+    }
+
+    public void setTree(List<Wezel> Drzewo)
+    {
+        this.drzewo = Drzewo;
     }
 
 }

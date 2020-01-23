@@ -126,7 +126,6 @@ public class Parser
         return wezly;
     }
 
-
     public List<Wezel> pharseObjectIdentifier()
     {
         List<Wezel> wezly = new List<Wezel>();
@@ -163,7 +162,6 @@ public class Parser
 
         return wezly;
     }
-
 
     public List<Wezel> pharseImport()
     {
@@ -251,7 +249,6 @@ public class Parser
 
         return insideFileNodes;
     }
-
 
     public void pharseDataType()
     {
@@ -408,8 +405,6 @@ public class Parser
             DataTypesList.Add(sequence);
         }
     }
-
-
 
     //COŚ NIE DZIAŁA - ZLOKALIZOWAĆ CO
     public DataType findTheSameDataType(DataType dt)
