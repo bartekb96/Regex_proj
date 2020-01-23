@@ -29,6 +29,10 @@ public class Koder
     private List<byte> lengthAndContent = new List<byte>();
     private List<byte> identyficator = new List<byte>();
 
+    public static List<List<byte>> sequence = new List<List<byte>>();
+    public static List<byte> finalSequence = new List<byte>();
+    public static int startedSequences = 1;
+
     bool doCodeSequence;
 
     public Koder()
@@ -63,7 +67,7 @@ public class Koder
         }
         else
         {
-            lst = codeSequence();
+            codeSequence();
         }
 
         return lst;
@@ -86,8 +90,6 @@ public class Koder
         this.primitiveOrConstructed = _primitiveOrConstructed;
         this.doCodeSequence = _codeSequence;
     }
-
-
     private List<byte> codeUniversal()
     {
         List<byte> lst = new List<byte>();
@@ -260,14 +262,174 @@ public class Koder
         return lst;
     }
 
-    private List<byte> codeSequence()  //dokończyć
+    private void codeSequence()  //dokończyć
     {
-        List<byte> lst = new List<byte>();
+        sequence.Add(new List<byte>());
+        Console.WriteLine("ROZPOCZALES KODOWANIE SEKWENCJI");
 
-        Console.WriteLine("codeSequence");
+        do
+        {
+            char choice;
 
-        return lst;
+            //Console.Clear();
+            Console.WriteLine("1. ROZPOCZNIJ NOWA SEKWENCJE");
+            Console.WriteLine("2. DODAJ NOWY ELEMENT DO OBECNEJ SEKWENCJI");
+            Console.WriteLine("3. ZAKONCZ OBECNA SEKWENCJE");
+            Console.Write("TWOJ WYBOR: ");
+            choice = Console.ReadKey().KeyChar;
+
+            do
+            {
+                switch (choice)
+                {
+                    case '1':
+                        startSequence();
+                        break;
+                    case '2':
+                        addElement();
+                        break;
+                    case '3':
+                        endSequence();
+                        break;
+                }
+            }
+            while (choice != '1' && choice != '2' && choice != '3');
+        }
+        while (startedSequences > 0);
+
+        //BUDOWANIE CALKOWITEJ SEKWENCJI
+        List<int> lengths = new List<int>();
+
+        for(int i=0; i<sequence.Count; i++)
+        {
+            lengths.Add(new int());
+            for(int j=i; j<sequence.Count; j++)
+            {
+                lengths[i] += sequence[j].Count + 2;
+            }
+            lengths[i] -= 2;
+        }
+
+        for(int i = 0; i < sequence.Count; i++)
+        {
+            finalSequence.Add(48);
+            finalSequence.Add(Convert.ToByte(lengths[i]));
+            finalSequence.AddRange(sequence[i]);
+        }
     }
+
+    private void endSequence()
+    {
+        Console.WriteLine("\n");
+        Console.WriteLine("ZAKONCZYLES SEKWENCJE");
+        startedSequences--;
+    }
+
+    private void startSequence()
+    {
+        Console.WriteLine("\n");
+        Console.WriteLine("ROZPOCZALES SEKWENCJE");
+        sequence.Add(new List<byte>());
+        startedSequences++;
+    }
+
+    private void addElement()
+    {
+        char y;
+        do
+        {
+            Console.Clear();
+            Console.WriteLine("JAKI ELEMENT ZAKODOWAC?");
+            Console.WriteLine("1. INTEGER");
+            Console.WriteLine("2. OCTET STRING");
+            Console.WriteLine("3. NULL");
+            Console.WriteLine("4. OBJECT IDENTIFIER");
+            Console.WriteLine("5. KODOWANIE UNIWERSALNE");
+            Console.Write("TWOJA ODPOWIEDZ: ");
+            y = Console.ReadKey().KeyChar;
+            Console.Write("\n");
+
+            string z;
+
+            switch (y)
+            {
+                case '1':
+                    Console.Clear();
+                    Console.WriteLine("PODAJ DANE DO ZAKODOWANIA");
+                    Console.Write("TWOJA ODPOWIEDZ: ");
+                    z = Console.ReadLine();
+                    Console.Write("\n");
+                    int cont;
+                    Int32.TryParse(z, out cont);
+                    this.setParams(2, cont, 0, 0, false);
+                    //lst.AddRange(codeInteger());
+                    sequence[startedSequences - 1].AddRange(codeInteger());
+                    Console.Clear();
+                    break;
+                case '2':
+                    Console.Clear();
+                    Console.WriteLine("PODAJ DANE DO ZAKODOWANIA");
+                    Console.Write("TWOJA ODPOWIEDZ: ");
+                    z = Console.ReadLine();
+                    Console.Write("\n");
+                    this.setParams(4, z, 0, 0, false);
+                    //lst.AddRange(codeOctetString());
+                    sequence[startedSequences - 1].AddRange(codeOctetString());
+                    Console.Clear();
+                    break;
+                case '3':
+                    this.setParams(5, 0, 0, 0, false);
+                    //lst.AddRange(codeNull());
+                    sequence[startedSequences - 1].AddRange(codeNull());
+                    Console.Clear();
+                    break;
+                case '4':
+                    Console.WriteLine("object identifier");         //DOKOŃCZYC!!!!!!
+                    break;
+                case '5':
+                    Console.Clear();
+                    Console.WriteLine("PODAJ DANE DO ZAKODOWANIA");
+                    Console.Write("TWOJA ODPOWIEDZ: ");
+                    string data = Console.ReadLine();
+                    Console.Write("\n");
+
+                    Console.WriteLine("PODAJ TAG");
+                    Console.Write("TWOJA ODPOWIEDZ: ");
+                    string tag = Console.ReadLine();
+                    Console.Write("\n");
+
+                    Console.WriteLine("PODAJ KLASE");
+                    Console.Write("TWOJA ODPOWIEDZ: ");
+                    string klasa = Console.ReadLine();
+                    Console.Write("\n");
+
+                    Console.WriteLine("PRIMITIVE CZY CONSTRUCTED");
+                    Console.Write("TWOJA ODPOWIEDZ: ");
+                    string pc = Console.ReadLine();
+                    Console.Write("\n");
+
+                    int _data;
+                    Int32.TryParse(data, out _data);
+                    int _tag;
+                    Int32.TryParse(tag, out _tag);
+                    int _klasa;
+                    Int32.TryParse(klasa, out _klasa);
+                    int _pc;
+                    Int32.TryParse(pc, out _pc);
+                    this.setParams(_tag, _data, _klasa, _pc, false);
+                    //lst.AddRange(codeUniversal());
+                    sequence[startedSequences - 1].AddRange(codeUniversal());
+                    Console.Clear();
+                    break;
+            }
+        }
+        while (y != '1' && y != '2' && y != '3' && y != '4' && y != '5');
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------------------
 
     private List<byte> getIdentyficator()
     {
