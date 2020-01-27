@@ -43,10 +43,25 @@ namespace Regex_podejscie_1
             koder.code();*/
 
             //KODOWANIE OBJECT IDENTIFIER
-            Koder koder = new Koder();
+            /*Koder koder = new Koder();
             koder.setTree(drzewo);
             koder.setParams(6, "1.3.6.1.4.1", 1, false);
-            koder.code();
+            koder.code();*/
+
+            //DEKODOWANIE INTEGERA
+            /*Dekoder dekoder = new Dekoder();
+            dekoder.setContent("2 2 12 193");
+            dekoder.decode();*/
+
+            //DEKODOWANIE OCTET STRINGA
+            /*Dekoder dekoder = new Dekoder();
+            dekoder.setContent("4 7 107 97 115 122 116 97 110");
+            dekoder.decode();*/
+
+            //DEKODOWANIE OBJECT IDENTIFIRE
+            Dekoder dekoder = new Dekoder();
+            dekoder.setContent("6 5 43 6 1 4 1");
+            dekoder.decode();
 
             Console.ReadKey();
         }

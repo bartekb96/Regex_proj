@@ -245,8 +245,6 @@ public class Koder
         }
 
         return lst;
-
-        return lst;
     }
 
     private List<byte> codeNull()
